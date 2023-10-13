@@ -71,25 +71,14 @@
 									<label for="exampleInputPassword1">Zip<span>*</span></label>
 									<input type="text" class="form-control" value="{{old('zip')}}" name="zip" id="zip" placeholder="Zip">
 								</div>
-							</div>
-						</div>
-						<div class="col-sm-12 col-md-10">
-							<h5>User Information</h5>
-						</div>
-						<div class="col-sm-12 col-md-10">
-							<div class="row">
-								<div class="col-sm-12 col-md-4 form-group">
+								<div class="col-sm-12 col-md-6 form-group">
 									<label for="exampleInputEmail1">Email<span>*</span></label>
 									<input type="email" class="form-control" value="{{old('email')}}" name="email" id="email" aria-describedby="emailHelp" placeholder="Email">
 								</div>
-								<div class="col-sm-12 col-md-4 form-group">
-									<label for="exampleInputPassword1">Password<span>*</span></label>
-									<input type="password" class="form-control" name="password" id="password" placeholder="Password">
-								</div>
-								<div class="col-sm-12 col-md-4 form-group">
-									<label for="exampleInputEmail1">Confirm Password<span>*</span></label>
-									<input type="password" class="form-control" name="password_confirmation" id="password_confirmation" placeholder="Confirm Password">
-								</div>
+							</div>
+						</div>
+						<div class="col-sm-12 col-md-10">
+							<div class="row">
 							</div>
 							<div class="form-group row">
 									<div class="col-md-6 col-sm-12"><button type="submit" class="btn btn-primary col-sm-12 col-md-5">Register</button></div>

@@ -62,7 +62,7 @@ class UserController extends Controller
             'last_name'   => 'required',
             'email'       => ['required', 'email', 'max:255', Rule::unique('calusers')],
             'phone' => ['required', 'numeric', 'Integer'],
-            'password'    => 'required|min:6|confirmed',
+            //'password'    => 'required|min:6|confirmed',
             'company'     => 'required',
             'address'     => 'required',
             'city'        => 'required',
@@ -75,7 +75,7 @@ class UserController extends Controller
         }
         //try{
             $data = $request->all();
-            $data['password'] = \Hash::make($request->password);
+            //$data['password'] = \Hash::make($request->password);
             if($request->has('avatar'))
             {
                 $file = $request->avatar;
@@ -167,16 +167,20 @@ class UserController extends Controller
             if($request->email != "") {
                 $checkEmail = User::where('email',$request->email)->first();
                 if(!empty($checkEmail)){
-                    $random = str_shuffle('abcdefghjklmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ234567890!$%^&!$%^&');
-                    $password = substr($random, 0, 10);
-                    $new_password = \Hash::make($password);
-                    $data = array('name'=>$checkEmail->first_name,'email'=>$checkEmail->email,"password" => $password,'company'=>$checkEmail->company);
-                    Mail::send('emails.forgot', $data, function($message) use ($request) {
-                        $message->to($request->email)
-                                ->subject('Forgot Password');
-                    });
-                    User::where('id',$checkEmail->id)->update(array('password' => $new_password));
-                    return redirect('/')->with('success','Your account information has been sent. Please check your email.');
+                    if($checkEmail->password != null && $checkEmail->password != ''){
+                        $random = str_shuffle('abcdefghjklmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ234567890!$%^&!$%^&');
+                        $password = substr($random, 0, 10);
+                        $new_password = \Hash::make($password);
+                        $data = array('name'=>$checkEmail->first_name,'email'=>$checkEmail->email,"password" => $password,'company'=>$checkEmail->company);
+                        Mail::send('emails.forgot', $data, function($message) use ($request) {
+                            $message->to($request->email)
+                                    ->subject('Forgot Password');
+                        });
+                        User::where('id',$checkEmail->id)->update(array('password' => $new_password));
+                        return redirect('/')->with('success','Your account information has been sent. Please check your email.');
+                    }else{
+                        return back()->with('error','Your password is not created. Please contact cal@com-power.com if you have any questions.');
+                    }
                 }else{
                     return back()->with('error','We could not verify that you have an account with us. Please contact 
                      cal@com-power.com if you have any questions.');
