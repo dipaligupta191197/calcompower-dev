@@ -100,7 +100,7 @@ class UserController extends Controller
 
                 // Replace [first_name] placeholder with the user's first_name
                 $content = str_replace('[name]', $user->first_name, $emailTemplate->content);
-                $content = str_replace('[companyname]', $user->company, $content);
+                $content = str_replace('[company_name]', $user->company, $content);
 
                 // Send the email
                 Mail::send('emails.emailtemplate', ['content' => $content], function ($message) use ($email, $subject, $content) {
@@ -126,7 +126,7 @@ class UserController extends Controller
                 $content = str_replace('[first_name]', $user->first_name, $emailTemplate->content);
                 $content = str_replace('[last_name]', $user->last_name, $content);
                 $content = str_replace('[email]', $user->email, $content);
-                $content = str_replace('[company]', $user->company, $content);
+                $content = str_replace('[company_name]', $user->company, $content);
                 $content = str_replace('[address]', $user->address, $content);
                 $content = str_replace('[city]', $user->city, $content);
                 $content = str_replace('[state]', $user->state, $content);
