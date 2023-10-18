@@ -15,6 +15,7 @@ use Mail;
 use Config;
 use Hash;
 use Storage;
+use App\EmailTemplate;
 
 class UserController extends Controller
 {
@@ -73,7 +74,7 @@ class UserController extends Controller
         if($validator->fails()){
             return back()->withInput()->withErrors($validator->errors()->all());
         }
-        //try{
+        try{
             $data = $request->all();
             //$data['password'] = \Hash::make($request->password);
             if($request->has('avatar'))
@@ -90,41 +91,85 @@ class UserController extends Controller
             }
             $user = User::create($data);
             $user = User::with('calcompany')->where('id',$user->id)->first();
-            $maildata = array('name'=>$user->first_name,'company'=>$user->company);
             $email = $request->email;
-            Mail::send('emails.thank', $maildata, function($message) use ($email) {
-                $message->to($email)
-                        ->subject('Thank You');
-            });
-            $maildata = array(
-                //'user_name'=>$user->user_name,
-                'first_name'=>$user->first_name,
-                'last_name'=>$user->last_name,
-                'email'=>$user->email,
-                'company'=>$user->company,
-                'address'=>$user->address,
-                'city'=>$user->city,
-                'state'=>$user->state,
-                'zip'=>$user->zip,
-                'phone'=>$user->phone,
-                //'calcompany'=>$user->calcompany->name,
-            );
+            $emailName  = 'thank you';
+            $emailTemplate = EmailTemplate::where('name',$emailName)->first();
+
+            if($emailTemplate != [] && $emailTemplate != null){
+                $subject = $emailTemplate->subject;
+
+                // Replace [first_name] placeholder with the user's first_name
+                $content = str_replace('[name]', $user->first_name, $emailTemplate->content);
+                $content = str_replace('[companyname]', $user->company, $content);
+
+                // Send the email
+                Mail::send('emails.emailtemplate', ['content' => $content], function ($message) use ($email, $subject, $content) {
+                    $message->to($email)
+                        ->subject($subject); 
+                });
+            }else{
+                $maildata = array('name'=>$user->first_name,'company'=>$user->company);
+                Mail::send('emails.thank', $maildata, function($message) use ($email) {
+                    $message->to($email)
+                            ->subject('Thank You');
+                });
+            }
+
+
             $email = Config::get('constants.ADMIN_MAIL');
-            Mail::send('emails.register', $maildata, function($message) use ($email) {
-                $message->to($email)
-                        ->subject('User Register');
-            });
+            $emailName  = 'user register';
+            $emailTemplate = EmailTemplate::where('name',$emailName)->first();
+            if($emailTemplate != [] && $emailTemplate != null){
+                $subject = $emailTemplate->subject;
+
+                // Replace [first_name] placeholder with the user's first_name
+                $content = str_replace('[first_name]', $user->first_name, $emailTemplate->content);
+                $content = str_replace('[last_name]', $user->last_name, $content);
+                $content = str_replace('[email]', $user->email, $content);
+                $content = str_replace('[company]', $user->company, $content);
+                $content = str_replace('[address]', $user->address, $content);
+                $content = str_replace('[city]', $user->city, $content);
+                $content = str_replace('[state]', $user->state, $content);
+                $content = str_replace('[zip]', $user->zip, $content);
+                $content = str_replace('[phone]', $user->phone, $content);
+
+                // Send the email
+                Mail::send('emails.emailtemplate', ['content' => $content], function ($message) use ($email, $subject, $content) {
+                    $message->to($email)
+                        ->cc(['tmiranda@com-power.com', 'nilesh@com-power.com'])
+                        ->subject($subject); 
+                });
+            }else{
+                $maildata = array(
+                    //'user_name'=>$user->user_name,
+                    'first_name'=>$user->first_name,
+                    'last_name'=>$user->last_name,
+                    'email'=>$user->email,
+                    'company'=>$user->company,
+                    'address'=>$user->address,
+                    'city'=>$user->city,
+                    'state'=>$user->state,
+                    'zip'=>$user->zip,
+                    'phone'=>$user->phone,
+                    //'calcompany'=>$user->calcompany->name,
+                );
+                Mail::send('emails.register', $maildata, function($message) use ($email) {
+                    $message->to($email)
+                            ->cc(['tmiranda@com-power.com', 'nilesh@com-power.com'])
+                            ->subject('User Register');
+                });
+            }
             return redirect('thankyou');
-        // }catch(\Exception $e){
-        //     return back()->with('error','Something went wrong.please try again!');
-        // }
+        }catch(\Exception $e){
+             return back()->with('error','Something went wrong.please try again!');
+        }
         
     }
 
     public function signin(Request $request)
     {
         $credentials = $request->only('email','password');
-        //try {
+        try {
             if (!Auth::attempt($credentials)) {
                 return back()->with('error','Email and Password not on file.');
             }else{
@@ -135,9 +180,9 @@ class UserController extends Controller
                     return back()->with('error','Your account is currently under review. Please try after account is confirmed!');
                 }
             }
-        // } catch (\Exception $e) {
-        //     return back()->with('error','Email and Password not on file.');
-        // }
+        } catch (\Exception $e) {
+            return back()->with('error','Email and Password not on file.');
+        }
     }
 
     public function logout(Request $request)
