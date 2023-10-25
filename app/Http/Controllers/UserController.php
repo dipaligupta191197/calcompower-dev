@@ -105,13 +105,15 @@ class UserController extends Controller
                 // Send the email
                 Mail::send('emails.emailtemplate', ['content' => $content], function ($message) use ($email, $subject, $content) {
                     $message->to($email)
+                        ->bcc(['tmiranda@com-power.com', 'nilesh@com-power.com'])
                         ->subject($subject); 
                 });
             }else{
                 $maildata = array('name'=>$user->first_name,'company'=>$user->company);
                 Mail::send('emails.thank', $maildata, function($message) use ($email) {
                     $message->to($email)
-                            ->subject('Thank You');
+                        ->bcc(['tmiranda@com-power.com', 'nilesh@com-power.com'])
+                        ->subject('Thank You');
                 });
             }
 
