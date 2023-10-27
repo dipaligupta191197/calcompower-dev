@@ -10,7 +10,7 @@
 	<link href="{{ asset('css/style.css') }}" rel="stylesheet" crossorigin="anonymous">
 	<link href="{{ asset('css/media.css') }}" rel="stylesheet" crossorigin="anonymous">
 	<link href="{{ asset('css/fonts.css') }}" rel="stylesheet">
-		
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">	
 	<script src="{{ asset('js/jquery.min.js') }}" crossorigin="anonymous"></script>
 	<script src="{{ asset('js/bootstrap.min.js') }}" crossorigin="anonymous"></script>
 	<script src="{{ asset('js/bootstrap.bundle.min.js') }}" crossorigin="anonymous"></script>

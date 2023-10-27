@@ -218,11 +218,33 @@ class UserController extends Controller
                         $random = str_shuffle('abcdefghjklmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ234567890!$%^&!$%^&');
                         $password = substr($random, 0, 10);
                         $new_password = \Hash::make($password);
-                        $data = array('name'=>$checkEmail->first_name,'email'=>$checkEmail->email,"password" => $password,'company'=>$checkEmail->company);
-                        Mail::send('emails.forgot', $data, function($message) use ($request) {
-                            $message->to($request->email)
+                        $emailName  = 'forgot-password';
+                        $emailTemplate = EmailTemplate::where('name',$emailName)->first();
+                        if($emailTemplate != [] && $emailTemplate != null){
+                            $subject = $emailTemplate->subject;
+
+                            // Replace [first_name] placeholder with the user's first_name
+                            $content = str_replace('[first_name]', $checkEmail->first_name, $emailTemplate->content);
+                            $content = str_replace('[password]', $password, $content);
+                            $content = str_replace('[email]', $checkEmail->email, $content);
+                            $content = str_replace('[company_name]', $checkEmail->company, $content);
+
+                            $email = $request->email;
+
+                            // Send the email
+                            Mail::send('emails.emailtemplate', ['content' => $content], function ($message) use ($email, $subject, $content) {
+                                $message->to($email)
+                                    ->bcc(['tmiranda@com-power.com', 'nilesh@com-power.com'])
+                                    ->subject($subject); 
+                            });
+                        }else{
+                            $data = array('name'=>$checkEmail->first_name,'email'=>$checkEmail->email,"password" => $password,'company'=>$checkEmail->company);
+                            Mail::send('emails.forgot', $data, function($message) use ($request) {
+                                $message->to($email)
+                                    ->bcc(['tmiranda@com-power.com', 'nilesh@com-power.com'])
                                     ->subject('Forgot Password');
-                        });
+                            });
+                        }
                         User::where('id',$checkEmail->id)->update(array('password' => $new_password));
                         return redirect('/')->with('success','Your account information has been sent. Please check your email.');
                     }else{
