@@ -18,9 +18,12 @@
 									<input type="text" class="form-control" name="email" id="email" placeholder="Email">
 								  </div>
 								  <div class="form-group">
-									<label for="exampleInputPassword1">Password<span>*</span></label>
-									<input type="password" class="form-control" name="password" id="password" placeholder="Password">
-								  </div>
+									    <label for="exampleInputPassword1">Password<span>*</span></label>
+									    <div class="password-input">
+									        <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+									        <i class="toggle-password fa fa-eye-slash" id="togglePassword"></i>
+									    </div>
+									</div>
 								  <div class="form-group">
 									  <a href="{{url('forgot')}}" title="Forgot Password?">Forgot Password?</a>
 								  </div>
@@ -60,6 +63,21 @@ $(document).ready(function () {
             }
         }
     });
+});
+
+const passwordInput = document.getElementById('password');
+const togglePassword = document.getElementById('togglePassword');
+
+togglePassword.addEventListener('click', function () {
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        togglePassword.classList.remove('fa-eye-slash');
+        togglePassword.classList.add('fa-eye');
+    } else {
+        passwordInput.type = 'password';
+        togglePassword.classList.remove('fa-eye');
+        togglePassword.classList.add('fa-eye-slash');
+    }
 });
 </script>
 @stop

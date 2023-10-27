@@ -92,7 +92,7 @@ $style = [
                             <p style="{{ $style['paragraph-sub'] }}">
                                 &copy; {{ date('Y') }}
                                 <a style="{{ $style['anchor'] }}" href="{{ url('/') }}" target="_blank">Com-Power Corporation</a>.
-                                {{ trans('strings.backend.general.all_rights_reserved') }}
+                                All Rights Reserved.
                             </p>
                         </td>
                     </tr>

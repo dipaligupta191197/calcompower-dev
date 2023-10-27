@@ -97,19 +97,28 @@
                                         <div class="row">
                                             <div class="col-sm-12 col-md-6 form-group">
                                                 <label for="password">Current Password</label>
-                                                <input type="Password" name="password" id="password" class="form-control" placeholder="XXXXXX">
+                                                <div class="password-input">
+                                                    <input type="password" name="password" id="password" class="form-control" placeholder="XXXXXX">
+                                                    <i class="toggle-password fa fa-eye-slash" id="togglePassword"></i>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12 col-md-6 form-group">
                                                 <label for="new_password">New Password</label>
-                                                <input type="Password" name="new_password" id="new_password" class="form-control" placeholder="XXXXXX">
+                                                <div class="password-input">
+                                                    <input type="password" name="new_password" id="new_password" class="form-control" placeholder="XXXXXX">
+                                                    <i class="toggle-password fa fa-eye-slash" id="toggleNewPassword"></i>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-12 col-md-6 form-group">
                                                 <label for="password_confirmation">Confirm Password</label>
-                                                <input type="Password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="XXXXXX">
+                                                <div class="password-input">
+                                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="XXXXXX">
+                                                    <i class="toggle-password fa fa-eye-slash" id="togglePasswordConfirmation"></i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -223,5 +232,27 @@ $(document).ready(function () {
         }
     });
 });
+
+const togglePassword = document.getElementById('togglePassword');
+const toggleNewPassword = document.getElementById('toggleNewPassword');
+const togglePasswordConfirmation = document.getElementById('togglePasswordConfirmation');
+
+function toggleVisibility(inputField, eyeIcon) {
+    eyeIcon.addEventListener('click', function () {
+        if (inputField.type === 'password') {
+            inputField.type = 'text';
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        } else {
+            inputField.type = 'password';
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        }
+    });
+}
+
+toggleVisibility(document.getElementById('password'), togglePassword);
+toggleVisibility(document.getElementById('new_password'), toggleNewPassword);
+toggleVisibility(document.getElementById('password_confirmation'), togglePasswordConfirmation);
 </script>
 @stop
